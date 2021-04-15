@@ -1,0 +1,24 @@
+server:
+  port: 8989
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/crm?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+
+#加载映射文件
+
+mybatis:
+  mapper-locations: classpath:mapper.*.xml
+
+logging:
+  level:
+    com:
+      kgw: debug
+
+  file:
+    name: E:\\wen.log
+
