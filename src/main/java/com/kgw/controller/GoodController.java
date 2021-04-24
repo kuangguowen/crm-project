@@ -2,7 +2,7 @@ package com.kgw.controller;
 
 import com.kgw.controller.base.BaseController;
 import com.kgw.domin.entity.Good;
-import com.kgw.http.AxiosResult;
+import com.kgw.commom.http.AxiosResult;
 import com.kgw.service.GoodService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

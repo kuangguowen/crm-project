@@ -1,6 +1,6 @@
 package com.kgw.controller.base;
 
-import com.kgw.http.AxiosResult;
+import com.kgw.commom.http.AxiosResult;
 
 /**
  * @version 1.8

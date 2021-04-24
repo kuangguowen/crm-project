@@ -1,4 +1,4 @@
-package com.kgw.page;
+package com.kgw.commom.page;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

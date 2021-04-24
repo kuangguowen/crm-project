@@ -1,12 +1,12 @@
 package com.kgw.service.base.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.kgw.commom.reflect.ReflectionUtils;
 import com.kgw.mapper.base.MyMapper;
 import com.kgw.service.base.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -14,9 +14,10 @@ import java.util.List;
  * @Author kgw
  * @Date: 2021/4/14 22:16
  */
+
 public class BaseServiceImpl<T> implements BaseService<T> {
 
-    @Resource
+    @Autowired
     private MyMapper<T> myMapper;
 
 
@@ -27,7 +28,6 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     protected MyMapper<T> getMyMapper(){
         return myMapper;
     }
-
 
     @Override
     public List<T> list() {
@@ -48,11 +48,13 @@ public class BaseServiceImpl<T> implements BaseService<T> {
 
     @Override
     public int add(T t) {
+        ReflectionUtils.invokeMethod(t, "setData", null, null);
         return myMapper.insert(t);
     }
 
     @Override
     public int update(T t) {
+        ReflectionUtils.invokeMethod(t, "setData", null, null);
         return myMapper.updateById(t);
     }
 

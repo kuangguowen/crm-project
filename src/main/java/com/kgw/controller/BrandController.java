@@ -1,13 +1,18 @@
 package com.kgw.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.kgw.controller.base.BaseController;
 import com.kgw.domin.entity.Brand;
-import com.kgw.http.AxiosResult;
+import com.kgw.domin.entity.base.BaseEntity;
+import com.kgw.domin.query.BrandCriteria;
+import com.kgw.domin.vo.BrandVo;
+import com.kgw.commom.http.AxiosResult;
+import com.kgw.commom.page.PageResult;
 import com.kgw.service.BrandService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -16,35 +21,38 @@ import java.util.List;
  * @Date: 2021/4/15 19:59
  */
 @RestController
-@RequestMapping("Brand")
-@RequiredArgsConstructor
+@RequestMapping("brand")
 public class BrandController extends BaseController {
 
+    @Autowired
+    private  BrandService brandService;
 
-    private final BrandService brandService;
+
 
     @GetMapping
-    public AxiosResult<List<Brand>> list() {
-        List<Brand> list = brandService.list();
-        return AxiosResult.success(list);
+    public AxiosResult<PageResult<BrandVo>> list(BrandCriteria brandCriteria) {
+
+       return AxiosResult.success(brandService.searchPage(brandCriteria));
     }
 
     @GetMapping("{id}")
-    public AxiosResult<Brand> searchById(@PathVariable Long id) {
-        Brand byId = brandService.getById(id);
-        return AxiosResult.success(byId);
+    public AxiosResult<BrandVo> searchById(@PathVariable Long id) {
+        BrandVo brandVo = brandService.findById(id);
+        return AxiosResult.success(brandVo);
     }
 
     @PostMapping
-    public AxiosResult<Void> add(@RequestBody Brand Brand) {
-        return toAxios(brandService.add(Brand));
+    public AxiosResult<Void> add(@RequestBody Brand brand) {
+
+        return toAxios(brandService.add(brand));
 
     }
 
 
     @PutMapping
-    public AxiosResult<Void> update(@RequestBody Brand Brand) {
-        return  toAxios(brandService.update(Brand));
+    public AxiosResult<Void> update(@RequestBody Brand brand) {
+
+        return  toAxios(brandService.update(brand));
 
     }
 
@@ -52,6 +60,12 @@ public class BrandController extends BaseController {
     @DeleteMapping("{id}")
     public AxiosResult<Void> deleteById(@PathVariable Long id){
        return toAxios(brandService.deleteBy(id));
+
+    }
+
+    @DeleteMapping("batch/{ids}")
+    public AxiosResult<Void> batchDelete(@PathVariable List<Long> ids){
+          return toAxios(brandService.batchDelete(ids)) ;
 
     }
 

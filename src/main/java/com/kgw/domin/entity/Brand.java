@@ -23,8 +23,6 @@ import java.time.LocalDateTime;
 @TableName("base_brand")
 public class Brand extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
-
 
     /**
      * 品牌名称

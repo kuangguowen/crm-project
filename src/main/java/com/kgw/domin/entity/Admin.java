@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * <p>
@@ -85,5 +86,10 @@ public class Admin extends BaseEntity {
      */
     private LocalDateTime pwdResetTime;
 
+
+    /**
+     * 角色ids
+     */
+    transient Set<Long> RoleIds;
 
 }

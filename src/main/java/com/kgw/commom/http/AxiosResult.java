@@ -1,6 +1,5 @@
-package com.kgw.http;
+package com.kgw.commom.http;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
