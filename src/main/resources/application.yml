@@ -1,7 +1,6 @@
 server:
   port: 8989
 
-
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,11 +14,29 @@ spring:
     format:
       date-time: yyyy-MM-dd HH:mm:ss
 
+  #指定文件上传文件大小
+  servlet:
+    multipart:
+      max-file-size: 100MB
+
+      #指定线程池
+#  task:
+#    scheduling: #scheduling调度的线程池数量
+#      pool:
+#        size: 20
+
+  task:
+    execution:
+      pool:
+        core-size: 50 #异步任务线程池的数据 @Async的线程池的数量
+
+
 #加载映射文件
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
 
+#log打印与打印位置
 logging:
   level:
     com:
@@ -27,4 +44,3 @@ logging:
 
   file:
     name: E:\\wen.log
-

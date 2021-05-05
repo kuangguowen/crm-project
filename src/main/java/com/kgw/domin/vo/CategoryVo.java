@@ -32,4 +32,6 @@ public class CategoryVo extends BaseVo {
      * 添加一个与前端数据传输对应的属性 children
      */
     List<CategoryVo> children;
+
+
 }

@@ -63,6 +63,7 @@ public class BaseServiceImpl<T> implements BaseService<T> {
         return myMapper.deleteById(id);
     }
 
+
     @Transactional
     @Override
     public int batchDelete(List<Long> ids) {

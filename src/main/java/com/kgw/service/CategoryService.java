@@ -1,7 +1,9 @@
 package com.kgw.service;
 
 
+import com.kgw.commom.page.PageResult;
 import com.kgw.domin.entity.Category;
+import com.kgw.domin.query.CategoryCriteria;
 import com.kgw.domin.vo.CategoryVo;
 import com.kgw.service.base.BaseService;
 import java.util.List;
@@ -17,7 +19,7 @@ public interface CategoryService extends BaseService<Category> {
      * 查询所有获取树形表格的方法
      * @return
      */
-    List<CategoryVo> getTree();
+    PageResult<CategoryVo> getTree(CategoryCriteria categoryCriteria);
 
     List<CategoryVo> getSelectTree();
 }

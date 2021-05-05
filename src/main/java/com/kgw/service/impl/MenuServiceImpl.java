@@ -5,9 +5,16 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgw.commom.Transfer.TransferUtils;
 import com.kgw.commom.page.PageResult;
+import com.kgw.domin.entity.AdminRole;
 import com.kgw.domin.entity.Menu;
+import com.kgw.domin.entity.Role;
+import com.kgw.domin.entity.RoleMenu;
 import com.kgw.domin.query.MenuCriteria;
 import com.kgw.domin.vo.MenuVo;
+import com.kgw.mapper.AdminRoleMapper;
+import com.kgw.mapper.MenuMapper;
+import com.kgw.mapper.RoleMapper;
+import com.kgw.mapper.RoleMenuMapper;
 import com.kgw.service.MenuService;
 import com.kgw.service.base.impl.BaseServiceImpl;
 import com.kgw.transfer.MenuTransfer;
@@ -19,6 +26,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -32,6 +40,9 @@ import java.util.stream.Collectors;
 public class MenuServiceImpl extends BaseServiceImpl<Menu> implements MenuService {
 
     private final MenuTransfer menuTransfer;
+    private final AdminRoleMapper adminRoleMapper;
+    private final RoleMenuMapper roleMenuMapper;
+    private final MenuMapper menuMapper;
 
     /**
      * 获取所有的菜单 通过树形展示
@@ -90,17 +101,30 @@ public class MenuServiceImpl extends BaseServiceImpl<Menu> implements MenuServic
         List<Menu> list = this.list();
         // 获取到一级菜单
         List<Menu> root = list.stream().filter(item -> item.getParentId().longValue() == 0).sorted((t, t1) -> t.getMenuSort() - t1.getMenuSort()).collect(Collectors.toList());
-        root.removeAll(list);
+        list.removeAll(root);
         // 转vo
         List<MenuVo> menuVos = menuTransfer.toVO(list);
         List<MenuVo> rootVo = menuTransfer.toVO(root);
-
         // 找孩子
-        rootVo.forEach(item->getChildren(item,menuVos));
-
+        rootVo.forEach(item->{
+            getChildren(item,menuVos);
+        });
         return rootVo;
     }
 
+
+    /**
+     * 通过用户名id 找到所有的role
+     * @param adminId
+     * @return
+     */
+    @Override
+    public List<Menu> getMenusByAdminId(Long adminId) {
+        List<Long> RoleIds = adminRoleMapper.selectList(new QueryWrapper<AdminRole>().lambda().eq(AdminRole::getAdminId, adminId)).stream().map(AdminRole::getRoleId).collect(Collectors.toList());
+        Set<Long> menuIds = roleMenuMapper.selectList(new QueryWrapper<RoleMenu>().lambda().in(RoleMenu::getRoleId, RoleIds)).stream().map(RoleMenu::getMenuId).collect(Collectors.toSet());
+        List<Menu> menus = menuMapper.selectBatchIds(menuIds);
+        return menus;
+    }
 
 
 }

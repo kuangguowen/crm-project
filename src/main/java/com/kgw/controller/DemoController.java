@@ -95,7 +95,7 @@ public class DemoController {
 
     }
 
-
+/*https://www.jd.com/brand.aspx*/
     @GetMapping("getBrandFromJD")
     public AxiosResult<Void> getBrandFromJd() throws Exception {
         Document document = Jsoup.connect("https://www.jd.com/brand.aspx").get();

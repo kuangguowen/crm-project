@@ -2,9 +2,14 @@ package com.kgw.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.kgw.commom.Transfer.TransferUtils;
+import com.kgw.commom.page.PageResult;
 import com.kgw.domin.entity.Category;
+import com.kgw.domin.query.CategoryCriteria;
 import com.kgw.domin.vo.CategoryVo;
+import com.kgw.domin.vo.MenuVo;
 import com.kgw.mapper.CategoryMapper;
 import com.kgw.mapper.base.MyMapper;
 import com.kgw.service.CategoryService;
@@ -15,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +35,6 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl extends BaseServiceImpl<Category> implements CategoryService {
 
 
-
     private final CategoryTransfer categoryTransfer;
 
     private final CategoryMapper categoryMapper;
@@ -40,13 +45,42 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
      * @return
      */
     @Override
-    public List<CategoryVo> getTree() {
-        // 查询所有
-        List<Category> list = this.list();
-        // 通过VO转换 成 categoryVos
-        List<CategoryVo> categoryVos = categoryTransfer.toVO(list);
+    public PageResult<CategoryVo> getTree(CategoryCriteria categoryCriteria) {
+        //开启分页
+        PageHelper.startPage(categoryCriteria.getCurrentPage(),categoryCriteria.getPageSize());
+        //获取到一级数据分页
+        List<Category> root = categoryMapper.selectList(new QueryWrapper<Category>().lambda().eq(Category::getParentId, 0));
+        // 获取分页数据 （总条数）
+        PageInfo<Category> pageInfo = new PageInfo<>(root);
+        //转换成vo
+        List<CategoryVo> categoryVos1 = categoryTransfer.toVO(root);
+        // 查询父id不为0 的
+        List<Category> search = this.search(new QueryWrapper<Category>().lambda().ne(Category::getParentId, 0));
+        List<CategoryVo> categoryVos = categoryTransfer.toVO(search);
+        categoryVos1.forEach(categoryVo -> {
+            getChildren(categoryVo,categoryVos);
+        });
         // 调用工具类
-        return TransferUtils.buildTree(categoryVos);
+        return new PageResult<CategoryVo>(pageInfo.getTotal(),categoryVos1);
+    }
+
+    /**
+     * 找孩子
+     */
+    public void getChildren(CategoryVo categoryVo, List<CategoryVo> list) {
+        // 找到孩子 并且排序
+        List<CategoryVo> second = list.stream().filter(item -> item.getParentId().longValue() == categoryVo.getId().longValue()).collect(Collectors.toList());
+        // 判断是否有孩子 孩子是否为空
+        if (second.size() > 0 && second != null) {
+            // 不为空 不是 null 进行set
+            categoryVo.setChildren(second);
+            // 添加完把第二级孩子删除
+            list.removeAll(second);
+            // 递归寻找
+            second.forEach(item->{
+                getChildren(item,list);
+            });
+        }
     }
 
     /**

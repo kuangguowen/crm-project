@@ -1,11 +1,13 @@
 package com.kgw.controller;
 
+import com.kgw.commom.page.PageResult;
+import com.kgw.commom.perm.HasPerm;
 import com.kgw.controller.base.BaseController;
 import com.kgw.domin.entity.Category;
 import com.kgw.commom.http.AxiosResult;
+import com.kgw.domin.query.CategoryCriteria;
 import com.kgw.domin.vo.CategoryVo;
 import com.kgw.service.CategoryService;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +28,9 @@ public class CategoryController extends BaseController {
     private CategoryService categoryService;
 
     @GetMapping
-    public AxiosResult<List<CategoryVo>> list() {
-        List<CategoryVo> list = categoryService.getTree();
-        return AxiosResult.success(list);
+    public AxiosResult<PageResult<CategoryVo>> list(CategoryCriteria categoryCriteria) {
+
+        return AxiosResult.success(categoryService.getTree(categoryCriteria));
     }
 
     @GetMapping("{id}")
@@ -37,20 +39,21 @@ public class CategoryController extends BaseController {
         return AxiosResult.success(byId);
     }
 
+    @HasPerm(perm = "category:add")
     @PostMapping
     public AxiosResult<Void> add(@RequestBody Category Category) {
         return toAxios(categoryService.add(Category));
 
     }
 
-
+    @HasPerm(perm = "category:edit")
     @PutMapping
     public AxiosResult<Void> update(@RequestBody Category Category) {
         return toAxios(categoryService.update(Category));
 
     }
 
-
+    @HasPerm(perm = "category:delete")
     @DeleteMapping("{id}")
     public AxiosResult<Void> deleteById(@PathVariable Long id) {
         return toAxios(categoryService.deleteBy(id));

@@ -6,6 +6,8 @@ import com.kgw.domin.query.AdminCriteria;
 import com.kgw.domin.vo.AdminVo;
 import com.kgw.service.base.BaseService;
 
+import java.util.Map;
+
 /**
  * @version 1.8
  * @Author kgw
@@ -35,4 +37,15 @@ public interface AdminService extends BaseService<Admin> {
 
 
     int updateAdminAanRoles(Admin admin);
+
+    /**
+     * 通过用户名找用户
+     */
+    Admin getUserByAdmin(String username);
+
+    /**
+     * 获得用户信息
+     * @return
+     */
+    Map<String, Object> getAdminInfo();
 }

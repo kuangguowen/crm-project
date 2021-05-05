@@ -32,6 +32,15 @@ public interface RoleService extends BaseService<Role> {
      */
     RoleVo findById(Long id);
 
+    /**
+     * 给角色赋予权限
+     */
+    int getRoleByMenu(Long roleId, List<Long> menuIds);
+
+    /**
+     * 获取角色权限（不全 只用于前端展示）
+     */
+    List<Long> getRoleTreeByMenu(Long roleId);
 
 
 }

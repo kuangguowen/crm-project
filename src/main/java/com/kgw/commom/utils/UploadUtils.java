@@ -1,4 +1,4 @@
-package com.kgw.utils;
+package com.kgw.commom.utils;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
@@ -38,7 +38,6 @@ public class UploadUtils {
         String fileName = System.nanoTime() + "." + StringUtils.getFilenameExtension(part.getSubmittedFileName());
         ossClient.putObject("ershibaqi", fileName, inputStream);
         ossClient.shutdown();
-        System.out.println(part.getSubmittedFileName());
         return "https://ershibaqi.oss-cn-beijing.aliyuncs.com/" + fileName;
     }
 }

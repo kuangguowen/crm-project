@@ -1,8 +1,5 @@
 package com.kgw.service.impl;
-
-import com.kgw.domin.entity.Admin;
 import com.kgw.domin.entity.Good;
-import com.kgw.service.AdminService;
 import com.kgw.service.GoodService;
 import com.kgw.service.base.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;

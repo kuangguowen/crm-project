@@ -1,5 +1,6 @@
 package com.kgw.controller;
 
+import com.kgw.commom.perm.HasPerm;
 import com.kgw.controller.base.BaseController;
 import com.kgw.domin.entity.Good;
 import com.kgw.commom.http.AxiosResult;
@@ -15,7 +16,7 @@ import java.util.List;
  * @Date: 2021/4/15 19:59
  */
 @RestController
-@RequestMapping("Good")
+@RequestMapping("good")
 @RequiredArgsConstructor
 public class GoodController extends BaseController {
 
@@ -34,20 +35,20 @@ public class GoodController extends BaseController {
         return AxiosResult.success(byId);
     }
 
+    @HasPerm(perm = "good:add")
     @PostMapping
     public AxiosResult<Void> add(@RequestBody Good Good) {
         return toAxios(goodService.add(Good));
 
     }
 
-
+    @HasPerm(perm = "good:edit")
     @PutMapping
     public AxiosResult<Void> update(@RequestBody Good Good) {
         return  toAxios(goodService.update(Good));
-
     }
 
-
+    @HasPerm(perm = "good:delete")
     @DeleteMapping("{id}")
     public AxiosResult<Void> deleteById(@PathVariable Long id){
        return toAxios(goodService.deleteBy(id));

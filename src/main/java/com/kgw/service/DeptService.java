@@ -1,7 +1,9 @@
 package com.kgw.service;
 
+import com.kgw.commom.page.PageResult;
 import com.kgw.domin.entity.Category;
 import com.kgw.domin.entity.Dept;
+import com.kgw.domin.query.DeptCriteria;
 import com.kgw.domin.vo.DeptVo;
 import com.kgw.service.base.BaseService;
 
@@ -27,4 +29,9 @@ public interface DeptService extends BaseService<Dept> {
      * @return
      */
     List<DeptVo> getChildrenById(long id);
+
+    /**
+     * 分页条件查询
+     */
+    PageResult<DeptVo> searchPage(DeptCriteria deptCriteria);
 }

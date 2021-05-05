@@ -1,8 +1,11 @@
 package com.kgw.controller;
 
+import com.kgw.commom.page.PageResult;
+import com.kgw.commom.perm.HasPerm;
 import com.kgw.controller.base.BaseController;
 import com.kgw.domin.entity.Dept;
 import com.kgw.commom.http.AxiosResult;
+import com.kgw.domin.query.DeptCriteria;
 import com.kgw.domin.vo.DeptVo;
 import com.kgw.service.DeptService;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +26,14 @@ public class DeptController extends BaseController {
 
     private final DeptService deptService;
 
+    /**
+     * 查询所有+分页条件
+     * @param deptCriteria
+     * @return
+     */
     @GetMapping
-    public AxiosResult<List<Dept>> list() {
-        List<Dept> list = deptService.list();
-        return AxiosResult.success(list);
+    public AxiosResult<PageResult<DeptVo>> list(DeptCriteria deptCriteria) {
+        return AxiosResult.success(deptService.searchPage(deptCriteria));
     }
 
     @GetMapping("{id}")
@@ -35,20 +42,21 @@ public class DeptController extends BaseController {
         return AxiosResult.success(byId);
     }
 
+    @HasPerm(perm = "dept:add")
     @PostMapping
     public AxiosResult<Void> add(@RequestBody Dept Dept) {
         return toAxios(deptService.add(Dept));
 
     }
 
-
+    @HasPerm(perm = "dept:edit")
     @PutMapping
     public AxiosResult<Void> update(@RequestBody Dept Dept) {
         return toAxios(deptService.update(Dept));
 
     }
 
-
+    @HasPerm(perm = "dept:delete")
     @DeleteMapping("{id}")
     public AxiosResult<Void> deleteById(@PathVariable Long id) {
         return toAxios(deptService.deleteBy(id));
